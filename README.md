@@ -29,7 +29,10 @@
 git clone https://github.com/iamfine78/CS-DataStructures-Visualizer.git
 cd CS-DataStructures-Visualizer
 
-# 安装依赖
+# 安装依赖（uv 管理，锁文件保证可复现）
+uv sync --extra test
+
+# 没有 uv 的话用 pip 也可以
 pip install -r requirements.txt
 
 # 运行示例
