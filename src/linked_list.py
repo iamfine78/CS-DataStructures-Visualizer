@@ -172,6 +172,20 @@ class LinkedList:
             L.next = s  # 将头节点的next指向新节点
         return self
 
+    # 反转链表 实质上是指针的反转，时间复杂度为O(n)，空间复杂度为O(1)
+    def reverse(self):
+        '''反转链表（非递归，单链表就地逆置）'''
+        p = self.head.next  # p指向第一个节点
+        pre = None  # pre指向前一个节点，初始时为None
+        while p :  # 遍历链表
+            next_node = p.next  # 保存下一个节点
+            p.next = pre  # 将当前节点的next指向前一个节点，实现反转
+            pre = p  # 将pre指向当前节点
+            p = next_node  # 将p指向下一个节点
+        self.head.next = pre  # 将头节点的next指向新的第一个节点
+
+
+
 #3.双链表操作
 class DNode:
     def __init__(self, data=None):
