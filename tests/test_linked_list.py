@@ -23,16 +23,6 @@ from linked_list import (
 )
 
 
-def to_pylist(ll):
-    """辅助：把带头结点的单链表转成 Python 列表，便于断言"""
-    result = []
-    p = ll.head.next
-    while p is not None:
-        result.append(p.data)
-        p = p.next
-    return result
-
-
 # ---------- 顺序表 ----------
 
 class TestSeqList:
@@ -130,22 +120,22 @@ class TestLinkedList:
         '''测试尾插法创建链表'''
         ll = LinkedList()
         ll.create_tail(5)  # 0,1,2,3,4
-        assert to_pylist(ll) == [0, 1, 2, 3, 4]
+        assert list(ll) == [0, 1, 2, 3, 4]
 
     def test_create_head(self):
         '''测试头插法创建链表'''
         ll = LinkedList()
         ll.create_head(4)  # 3,2,1,0
-        assert to_pylist(ll) == [3, 2, 1, 0]
+        assert list(ll) == [3, 2, 1, 0]
 
     def test_list_insert(self):
         '''测试在链表的指定位置插入元素'''
         ll = LinkedList()
         ll.create_tail(3)  # 0,1,2
         assert ll.list_insert(1, 99) is True
-        assert to_pylist(ll) == [99, 0, 1, 2]
+        assert list(ll) == [99, 0, 1, 2]
         assert ll.list_insert(3, 77) is True
-        assert to_pylist(ll) == [99, 0, 77, 1, 2]
+        assert list(ll) == [99, 0, 77, 1, 2]
 
     def test_list_insert_invalid(self):
         '''测试在链表的指定位置插入元素时，索引不合法返回False'''
@@ -160,9 +150,9 @@ class TestLinkedList:
         ll = LinkedList()
         ll.create_tail(4)  # 0,1,2,3
         assert ll.list_delete(1) is True
-        assert to_pylist(ll) == [1, 2, 3]
+        assert list(ll) == [1, 2, 3]
         assert ll.list_delete(3) is True
-        assert to_pylist(ll) == [1, 2]
+        assert list(ll) == [1, 2]
 
     def test_list_delete_invalid(self):
         '''测试删除链表的指定位置的元素时，索引不合法返回False'''
@@ -195,11 +185,11 @@ class TestLinkedList:
         ll.create_tail(2)  # 0,1
         head = ll.head
         assert ll.insert_next(head, 5)
-        assert to_pylist(ll) == [5, 0, 1]
+        assert list(ll) == [5, 0, 1]
         first = ll.head.next
         s = LNode(7)
         assert ll.insert_prior(first, s)  # 交换法前插
-        assert to_pylist(ll) == [7, 5, 0, 1]
+        assert list(ll) == [7, 5, 0, 1]
 
     def test_delete_node(self):
         '''测试复制删除法删除链表的指定节点'''
@@ -207,7 +197,7 @@ class TestLinkedList:
         ll.create_tail(3)  # 0,1,2
         node = ll.get_node(2)  # 节点 1
         assert ll.delete_node(node)  # 复制删除法：用后继覆盖
-        assert to_pylist(ll) == [0, 2]
+        assert list(ll) == [0, 2]
 
     def test_delete_node_tail_returns_false(self):
         '''测试复制删除法删除链表的尾节点返回False'''
@@ -221,19 +211,41 @@ class TestLinkedList:
         ll = LinkedList()
         ll.create_tail(5)  # 0,1,2,3,4
         ll.reverse()
-        assert to_pylist(ll) == [4, 3, 2, 1, 0]
+        assert list(ll) == [4, 3, 2, 1, 0]
         ll.reverse()  # 反转两次还原
-        assert to_pylist(ll) == [0, 1, 2, 3, 4]
+        assert list(ll) == [0, 1, 2, 3, 4]
 
     def test_reverse_single_and_empty(self):
         '''测试链表的反转操作在空表和单节点表的情况'''
         ll = LinkedList()
         ll.reverse()  # 空表不崩
-        assert to_pylist(ll) == []
+        assert list(ll) == []
         ll.create_tail(1)
         ll.reverse()  # 单节点不变
-        assert to_pylist(ll) == [0]
+        assert list(ll) == [0]
 
+    def test_iter(self):
+        '''测试 __iter__：链表可转列表、可 for 循环、可求和'''
+        ll = LinkedList()
+        ll.create_tail(5)  # 0,1,2,3,4
+        assert list(ll) == [0, 1, 2, 3, 4]
+        assert sum(x for x in ll) == 10
+
+    def test_len(self):
+        '''测试 __len__：空表为 0，随插删变化'''
+        ll = LinkedList()
+        assert len(ll) == 0
+        ll.create_tail(3)
+        assert len(ll) == 3
+        ll.list_delete(1)
+        assert len(ll) == 2
+
+    def test_repr(self):
+        '''测试 __repr__：字符串表示与空表'''
+        ll = LinkedList()
+        ll.create_tail(3)
+        assert repr(ll) == '0->1->2'
+        assert repr(LinkedList()) == ''
 
 # ---------- 双链表 ----------
 
@@ -272,7 +284,6 @@ class TestDLinkedList:
         p = dll.head.next
         assert dll.delete_next(p) is False
 
-
 # ---------- 循环链表 ----------
 
 class TestCLinkedList:
@@ -280,7 +291,6 @@ class TestCLinkedList:
         '''测试循环链表的初始化，头结点的next指向自身'''
         cll = CLinkedList()
         assert cll.head.next is cll.head
-
 
 # ---------- 静态链表 ----------
 
@@ -313,7 +323,6 @@ class TestSLinklist:
         sl = SLinklist(3)
         assert sl.free_node(0) is False
         assert sl.free_node(3) is False
-
 
 if __name__ == "__main__":
     # 无 pytest 环境时直接运行
