@@ -75,6 +75,27 @@ class LinkedList:
         '''初始化链表(带头结点)'''
         self.head = LNode(None)  # 链表的头节点
 
+    def __iter__(self):
+        '''迭代器，用于遍历链表'''
+        p = self.head.next  # 从第一个节点开始遍历
+        while p is not None:
+            yield p.data  # 返回当前节点的数据
+            p = p.next  # 移动到下一个节点
+
+    def __len__(self):
+        '''返回链表的长度'''
+        length = 0
+        p = self.head.next  # 从第一个节点开始遍历
+        while p is not None:
+            length += 1  # 计数器加1
+            p = p.next  # 移动到下一个节点
+        return length  # 返回链表的长度
+
+    def __repr__(self):
+        '''返回链表的字符串表示'''
+        return '->'.join(map(str, self))  # 将链表的数据用'->'连接成字符串
+
+
     def list_insert(self, i, e)->bool:
         '''在链表的指定位置插入元素'''
         p=self.get_node(i-1) # 获取插入位置的前一个节点
